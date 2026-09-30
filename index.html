@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ToyBox — Real Toys & Games</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f6f7fb;color:#172033}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e7eaf0}.nav{max-width:1220px;margin:auto;padding:13px 18px;display:flex;align-items:center;gap:15px}
+.logo{font-size:26px;font-weight:900;color:#ff5a36;white-space:nowrap}.logo span{color:#315bea}
+.search{flex:1;position:relative}.search input{width:100%;padding:13px 16px 13px 43px;border:1px solid #d7ddea;border-radius:14px;font-size:15px;outline:0}.search:before{content:"🔎";position:absolute;left:14px;top:11px}
+.cart{background:#172033;color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.cart b{background:#ff5a36;padding:2px 7px;border-radius:20px}
+.hero{max-width:1220px;margin:25px auto;padding:0 18px}.heroBox{border-radius:25px;padding:38px;background:linear-gradient(135deg,#315bea,#7657e8);color:#fff;display:flex;justify-content:space-between;align-items:center}.hero h1{font-size:42px;margin:0 0 8px}.hero p{opacity:.9;font-size:17px}.hero button{border:0;border-radius:11px;padding:13px 19px;font-weight:800;color:#315bea;background:#fff;cursor:pointer}.heroArt{font-size:75px}
+.section{max-width:1220px;margin:auto;padding:0 18px}.section h2{margin:25px 0 12px}.brands{display:flex;gap:10px;overflow:auto;padding-bottom:5px}.brand{min-width:125px;height:65px;background:#fff;border:1px solid #e4e7ee;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;cursor:pointer;padding:10px}.brand img{max-width:78px;max-height:32px}.brand.active,.brand:hover{border-color:#315bea;box-shadow:0 0 0 3px #315bea16}
+.controls{display:flex;gap:9px;overflow:auto;margin:18px 0}.chip{white-space:nowrap;border:1px solid #dce1eb;background:#fff;border-radius:999px;padding:9px 15px;cursor:pointer}.chip.active{background:#172033;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding-bottom:55px}.card{background:#fff;border:1px solid #e7eaf0;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px #17203309}.photo{height:210px;background:#fff;display:flex;align-items:center;justify-content:center;padding:12px}.photo img{width:100%;height:100%;object-fit:contain}.info{padding:14px}.brandName{font-size:12px;font-weight:800;color:#315bea;text-transform:uppercase}.name{font-weight:850;margin:6px 0}.price{font-weight:900;font-size:18px}.row{display:flex;align-items:center;justify-content:space-between;margin-top:11px}.add{background:#ff5a36;color:#fff;border:0;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}.empty{grid-column:1/-1;text-align:center;padding:60px;color:#687084}
+.drawer{position:fixed;right:-430px;top:0;height:100%;width:min(420px,100%);background:#fff;z-index:40;box-shadow:-10px 0 35px #0002;transition:.25s;padding:20px;display:flex;flex-direction:column}.drawer.open{right:0}.head{display:flex;justify-content:space-between}.close{border:0;background:#eef1f7;border-radius:9px;padding:8px 11px}.items{flex:1;overflow:auto}.item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #eee}.mini{width:58px;height:58px;object-fit:contain;border-radius:10px;background:#f5f6fa}.qty button{border:1px solid #ddd;background:#fff;border-radius:6px;width:26px;height:26px}.checkout{width:100%;border:0;background:#315bea;color:#fff;padding:14px;border-radius:11px;font-weight:800}.toast{position:fixed;z-index:60;bottom:20px;left:50%;transform:translate(-50%,120px);background:#172033;color:#fff;padding:12px 18px;border-radius:11px;transition:.25s}.toast.show{transform:translate(-50%,0)}
+.note{font-size:12px;color:#687084;margin:-4px 0 15px}.source{font-size:11px;color:#8991a2}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}.hero h1{font-size:34px}}
+@media(max-width:650px){.nav{flex-wrap:wrap}.logo{width:100%}.search{flex-basis:100%;order:3}.heroBox{padding:26px}.hero h1{font-size:29px}.heroArt{display:none}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<div class="logo">Toy<span>Box</span> 🧸</div>
+<div class="search"><input id="search" placeholder="Search real products, brands, games..."></div>
+<button class="cart" onclick="openCart()">🛒 Cart <b id="count">0</b></button>
+</div></header>
+
+<section class="hero"><div class="heroBox">
+<div><h1>Real Toys. Real Brands.</h1><p>Shop collectible cars, building sets, card games and more from recognizable toy brands.</p><button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop products →</button></div>
+<div class="heroArt">🏎️ 🧱 🃏</div>
+</div></section>
+
+<section class="section">
+<h2>Shop by Brand</h2>
+<p class="note">Brand logos are shown for navigation/identification. Use brand-authorized assets when you launch commercially.</p>
+<div class="brands" id="brands"></div>
+<div class="controls" id="chips"></div>
+<div class="grid" id="products"></div>
+</section>
+
+<aside class="drawer" id="drawer"><div class="head"><h2>Your Cart</h2><button class="close" onclick="closeCart()">✕</button></div><div class="items" id="items"></div><div><div style="display:flex;justify-content:space-between;margin:12px 0"><b>Total</b><b id="total">Rs 0</b></div><button class="checkout" onclick="checkout()">Checkout</button></div></aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const IMG={
+hotwheels:"https://images.mattel.net/image/upload/w_646%2Cf_auto%2Cc_scale/shop-us-prod/files/pw8ru23zvyq6uplwpepi_570b4828-6a1d-4086-86c1-e7b94d55c5b4.png",
+lego:"https://www.lego.com/cdn/cs/set/assets/blt5ada65177139fafb/10270_Prod.png?dpr=1&fit=bounds&format=jpg&height=1500&quality=80&width=1500",
+uno:"https://images.mattel.net/image/upload/w_646%2Cf_auto%2Cc_scale/shop-us-prod/files/k33zfqfgrq9bwdfuxu7k.png"
+};
+const products=[
+{id:1,name:"Hot Wheels 5-Car Pack",brand:"Hot Wheels",cat:"Collectible Cars",price:2499,img:IMG.hotwheels},
+{id:2,name:"LEGO Creator Expert Bookshop",brand:"LEGO",cat:"Building Sets",price:45999,img:IMG.lego},
+{id:3,name:"UNO Classic Card Game",brand:"UNO",cat:"Card Games",price:1799,img:IMG.uno},
+{id:4,name:"Hot Wheels Premium Collection",brand:"Hot Wheels",cat:"Collectible Cars",price:5999,img:IMG.hotwheels},
+{id:5,name:"LEGO Display Building Set",brand:"LEGO",cat:"Building Sets",price:32999,img:IMG.lego},
+{id:6,name:"UNO Family Card Game",brand:"UNO",cat:"Card Games",price:1999,img:IMG.uno}
+];
+const logos={
+"Hot Wheels":"https://cdn.simpleicons.org/hotwheels",
+"LEGO":"https://cdn.simpleicons.org/lego",
+"UNO":"https://cdn.simpleicons.org/uno",
+"Mattel":"https://cdn.simpleicons.org/mattel",
+"Hasbro":"https://cdn.simpleicons.org/hasbro",
+"Spin Master":"https://cdn.simpleicons.org/spinmaster"
+};
+let cart=JSON.parse(localStorage.getItem("toybox2")||"[]"),brand="All",cat="All";
+
+const brandList=["All","Hot Wheels","LEGO","UNO","Mattel","Hasbro","Spin Master"];
+document.getElementById("brands").innerHTML=brandList.map(b=>b==="All"?`<button class="brand active" onclick="setBrand('All',this)">All Brands</button>`:`<button class="brand" onclick="setBrand('${b}',this)"><img src="${logos[b]}" onerror="this.style.display='none'"><span>${b}</span></button>`).join("");
+const cats=["All","Collectible Cars","Building Sets","Card Games"];
+document.getElementById("chips").innerHTML=cats.map(c=>`<button class="chip ${c==="All"?"active":""}" onclick="setCat('${c}',this)">${c}</button>`).join("");
+
+function render(){
+let q=document.getElementById("search").value.toLowerCase().trim();
+let list=products.filter(p=>(brand==="All"||p.brand===brand)&&(cat==="All"||p.cat===cat)&&(p.name+" "+p.brand+" "+p.cat).toLowerCase().includes(q));
+document.getElementById("products").innerHTML=list.length?list.map(p=>`<article class="card"><div class="photo"><img src="${p.img}" alt="${p.name}" loading="lazy"></div><div class="info"><div class="brandName">${p.brand}</div><div class="name">${p.name}</div><div class="row"><span class="price">Rs ${p.price.toLocaleString()}</span><button class="add" onclick="add(${p.id})">Add +</button></div><div class="source">Product photo: brand's official product page</div></div></article>`).join(""):`<div class="empty"><h2>No products found</h2><p>Try another brand, category or search.</p></div>`;
+}
+function setBrand(b,el){brand=b;document.querySelectorAll(".brand").forEach(x=>x.classList.remove("active"));el.classList.add("active");render()}
+function setCat(c,el){cat=c;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));el.classList.add("active");render()}
+document.getElementById("search").addEventListener("input",render);
+
+function add(id){let x=cart.find(x=>x.id===id);x?x.qty++:cart.push({id,qty:1});save();toast("Added to cart 🛒")}
+function save(){localStorage.setItem("toybox2",JSON.stringify(cart));update()}
+function update(){document.getElementById("count").textContent=cart.reduce((a,x)=>a+x.qty,0);document.getElementById("items").innerHTML=cart.length?cart.map(x=>{let p=products.find(p=>p.id===x.id);return `<div class="item"><img class="mini" src="${p.img}"><div style="flex:1"><b>${p.name}</b><div>Rs ${p.price.toLocaleString()}</div><div class="qty" style="margin-top:7px"><button onclick="change(${p.id},-1)">−</button> <b>${x.qty}</b> <button onclick="change(${p.id},1)">+</button></div></div></div>`}).join(""):`<p style="text-align:center;color:#687084;padding:50px 10px">Your cart is empty.</p>`;let t=cart.reduce((a,x)=>a+products.find(p=>p.id===x.id).price*x.qty,0);document.getElementById("total").textContent="Rs "+t.toLocaleString()}
+function change(id,d){let x=cart.find(x=>x.id===id);x.qty+=d;if(x.qty<1)cart=cart.filter(y=>y.id!==id);save()}
+function openCart(){document.getElementById("drawer").classList.add("open")}function closeCart(){document.getElementById("drawer").classList.remove("open")}
+function checkout(){toast(cart.length?"Demo checkout — connect your payment gateway here.":"Cart is empty")}
+function toast(t){let x=document.getElementById("toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),1800)}
+render();update();
+</script>
+</body></html>
